@@ -9,6 +9,33 @@
       @apply scroll-smooth
   }
   body {
-      @apply font-[Poppins]
+      @apply font-[Poppins]  bg-teal-50
+  }
+}
+
+@layer components {
+  h1 {
+    @apply font-bold text-4xl mb-2
+  }
+  input {
+    @apply rounded-md p-2 mt-2  border-2 shadow-sm border-indigo-500 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-indigo-500 h-[45px]
+  }
+  button {
+    @apply text-white  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-4 
+  }
+  label {
+    @apply  text-indigo-700 
+  }
+  .queue {
+    @apply border-4 h-24 flex justify-center items-center w-[25%]
+  }
+  .front {
+    @apply border-emerald-400 
+  }
+  .back {
+    @apply border-gray-400 
+  }
+  .customer {
+    @apply h-20 w-20 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center
   }
 }
