@@ -1,34 +1,27 @@
 import React, { useState } from "react";
+import { useGlobalContext } from "../context";
 
 const InputForm = () => {
-  const [items, setItems] = useState("1");
-  const min = 1;
-  const max = 100;
+  const { items, handleChange, checkout } = useGlobalContext();
 
-  const handleChange = (e) => {
-    const value = Math.max(min, Math.min(max, Number(e.target.value)));
-    setItems(value);
-  };
   return (
-    <form className="flex items-center gap-4 w-[50%]">
-      <div className="relative z-0 w-full mb-6 group flex flex-col">
-        <label for="items">Number of Items (1-100)</label>
+    <form className=" items-center gap-4 w-[50%]" onSubmit={(e) => checkout(e)}>
+      <label for="items">Number of Items (1-100)</label>
+      <div className="relative z-0 w-full mb-6 group flex gap-4 ">
         <input
           type="number"
           id="items"
-          min={min}
-          max={max}
           onChange={(e) => handleChange(e)}
           value={items}
           required
         />
+        <button
+          type="submit"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm "
+        >
+          Checkout
+        </button>
       </div>
-      <button
-        type="button"
-        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm "
-      >
-        Checkout
-      </button>
     </form>
   );
 };

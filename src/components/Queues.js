@@ -1,13 +1,12 @@
 import React from "react";
+import Queue from "./Queue";
 
 const Queues = () => {
   return (
-    <div className="grid grid-cols-1 gap-4 ">
-      <div className="queue front">
-        <div className="customer">12</div>
-      </div>
-      <div className="queue back">
-        <div className="customer">12</div>
+    <div className="">
+      <h2>Queues</h2>
+      <div className="grid grid-cols-2 gap-4 ">
+        <Queue />
       </div>
     </div>
   );
