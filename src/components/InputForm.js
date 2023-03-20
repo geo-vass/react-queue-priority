@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { useGlobalContext } from "../context";
 
 const InputForm = () => {
-  const { items, handleChange, checkout } = useGlobalContext();
+  const { items, handleChange, addToQueue } = useGlobalContext();
 
   return (
-    <form className=" items-center gap-4 w-[50%]" onSubmit={(e) => checkout(e)}>
-      <label for="items">Number of Items (1-100)</label>
+    <form
+      className=" items-center gap-4 w-[50%]"
+      onSubmit={(e) => addToQueue(e)}
+    >
+      <label htmlFor="items">Number of Items (1-100)</label>
       <div className="relative z-0 w-full mb-6 group flex gap-4 ">
         <input
           type="number"

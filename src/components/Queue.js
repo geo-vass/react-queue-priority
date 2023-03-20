@@ -1,23 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useGlobalContext } from "../context";
 
-const Queue = () => {
-  const { queue } = useGlobalContext();
+const Queue = ({ queue, index }) => {
+  const { removeFromQueue } = useGlobalContext();
 
+  useEffect(() => {
+    if (queue.length === 0) return;
+    const timeout = removeFromQueue(index);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [queue[0]]);
   return (
     <div className="flex flex-col gap-4">
-      <div className="queue front" key={0}>
-        {queue.customers.length ? (
-          <div className="customer">{queue.customers[0]}</div>
-        ) : (
-          ""
-        )}
+      <div className="queue front w-full" key={0}>
+        {queue.length ? <div className="customer">{queue[0]}</div> : ""}
       </div>
-      {queue.customers.map((customer, index) => {
+      {queue.map((items, index) => {
         if (index > 0)
           return (
-            <div className="queue back" key={index}>
-              <div className="customer">{customer}</div>
+            <div className="queue back w-full" key={index}>
+              <div className="customer">{items}</div>
             </div>
           );
       })}

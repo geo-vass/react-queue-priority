@@ -5,55 +5,73 @@ const AppContext = createContext();
 const MIN = 1;
 const MAX = 100;
 const CHECKOUT_INTERVAL = 1000;
+const initialQueues = Array(5).fill([]);
+const initialTotals = Array(5).fill(0);
 
 const AppProvider = ({ children }) => {
-  const [items, setItems] = useState("1");
+  const [items, setItems] = useState(1);
 
   const handleChange = (e) => {
     const value = Math.max(MIN, Math.min(MAX, Number(e.target.value)));
     setItems(value);
   };
 
-  const [queue, setQueue] = useState({
-    customers: [],
-    totalItems: 0,
-  });
+  const [queues, setQueues] = useState(initialQueues);
+  const [totals, setTotals] = useState(initialTotals);
 
-  const checkout = (e) => {
+  const findBestQueue = () => {
+    const queueItems = [];
+
+    queues.forEach((queue) => {
+      queueItems.push(queue.reduce((sum, val) => sum + val, 0));
+    });
+    console.log({ queueItems });
+    const min = Math.min(...queueItems);
+    return queueItems.indexOf(min);
+  };
+  const addToQueue = (e) => {
     e.preventDefault();
-    setQueue((prevQueue) => {
-      return {
-        customers: [...prevQueue.customers, items],
-        totalItems: prevQueue.totalItems + items,
-      };
+    const bestQueue = findBestQueue();
+
+    setQueues((prevQueue) => {
+      return prevQueue.map((queue, index) =>
+        index !== bestQueue ? queue : [...queue, items]
+      );
     });
   };
-  useEffect(() => {
-    console.log("EFFECT");
+
+  const removeFromQueue2 = (queueNumber) => {
+    const queue = queues[queueNumber];
     const timeout = setTimeout(() => {
-      if (queue.totalItems === 0) {
-        clearTimeout(timeout);
-        return;
-      }
-      setQueue((prevQueue) => {
-        const newQueue = prevQueue.customers.map((items, index) =>
-          index === 0 ? items - 1 : items
-        );
+      setQueues((prevQueue) => {
+        const newQueue = [...prevQueue[queueNumber]];
+        newQueue[0] -= 1;
         if (newQueue[0] === 0) newQueue.shift();
-        return {
-          customers: newQueue,
-          totalItems: Math.max(prevQueue.totalItems - 1, 0),
-        };
+        return prevQueue.map((queue, index) => {
+          if (index !== queueNumber) return queue;
+          if (queue[0] === 0) return;
+          else return newQueue;
+        });
       });
     }, CHECKOUT_INTERVAL);
-    console.log(timeout);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [queue.customers[0]]);
-
+    return timeout;
+  };
+  const removeFromQueue = (queueNumber) => {
+    const timeout = setTimeout(() => {
+      setQueues((prevQueue) => {
+        return prevQueue.map((queue, index) =>
+          index !== queueNumber
+            ? queue
+            : [queue[0] - 1, ...queue.slice(1)].filter((items) => items !== 0)
+        );
+      });
+    }, CHECKOUT_INTERVAL);
+    return timeout;
+  };
   return (
-    <AppContext.Provider value={{ items, handleChange, checkout, queue }}>
+    <AppContext.Provider
+      value={{ items, handleChange, addToQueue, queues, removeFromQueue }}
+    >
       {children}
     </AppContext.Provider>
   );
