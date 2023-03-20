@@ -11,3 +11,6 @@
 ## Info
 
 App built with tailwind and react ;)
+
+## Live
+https://react-queue-priority.netlify.app/
